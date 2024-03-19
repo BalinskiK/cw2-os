@@ -54,7 +54,7 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
                 private_vm_count++;
             if (vma->vm_flags & VM_LOCKED)
                 locked_vm_count++;
-            if (vma->vm_flags & VM_EXECUTABLE)
+            if (vma->vm_file && vma->vm_flags & VM_EXEC)
                 executable_image_vm_count++;
             if (vma->vm_file)
                 file_backed_vm_count++;
