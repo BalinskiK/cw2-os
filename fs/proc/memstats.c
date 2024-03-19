@@ -8,6 +8,8 @@
 int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *pid, struct task_struct *task) {
     struct vm_area_struct *vma;
     struct mm_struct *mm;
+    struct page *page;
+    struct pagewalk_audit audit;
 
     int total_vm_count = 0;
     unsigned long biggest_vma_size = 0;
@@ -65,8 +67,7 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
                 anonymous_vm_count++;
 
             // Pagewalk to get additional page statistics
-            struct page *page;
-            struct pagewalk_audit audit;
+            
 
             pagewalk_init(&audit, current->mm);
             pagewalk_start(&audit);
