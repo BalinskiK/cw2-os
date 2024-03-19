@@ -34,7 +34,6 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
 
     // Gather memory statistics
     mm = get_task_mm(task);
-    mm->
     if (mm) {
         vma = mm->mmap_cache;
         VMA_ITERATOR(vmi, mm, 0);
