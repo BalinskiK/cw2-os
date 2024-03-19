@@ -6,18 +6,9 @@
 #include <linux/pagewalk.h>
 #include <linux/pagemap.h> 
 
-struct pagewalk_audit {
-    struct mm_struct *mm;
-    struct vm_area_struct *vma;
-    unsigned long address;
-    int flags;
-};
-
 int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *pid, struct task_struct *task) {
     struct vm_area_struct *vma;
     struct mm_struct *mm;
-    struct page *page;
-    struct pagewalk_audit audit;
 
     int total_vm_count = 0;
     unsigned long biggest_vma_size = 0;
@@ -76,10 +67,6 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
 
             // Pagewalk to get additional page statistics
             
-
-            pagewalk_init(&audit, current->mm);
-            pagewalk_start(&audit);
-
             // Loop through each page in the VMA
             for (unsigned long addr = vma->vm_start; addr < vma->vm_end; addr += PAGE_SIZE) {
                 page = follow_page(vma, addr, FOLL_GET);
@@ -107,7 +94,7 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
                 page_cache_release(page);
             }
 
-            pagewalk_end(&audit);
+
         };
         mmap_read_unlock(mm);
 
