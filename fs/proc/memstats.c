@@ -30,13 +30,13 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
     // Other memory statistics...
 
     // Lock the task's memory descriptor to ensure data integrity
-    task_lock(task);
+    //task_lock(task);
 
     // Gather memory statistics
     mm = get_task_mm(task);
     if (mm) {
         VMA_ITERATOR(vmi, mm, 0);
-        mmap_read_lock(mm);
+        //mmap_read_lock(mm);
         for_each_vma(vmi, vma) {
             // Count different types of VMAs
             total_vm_count++;
@@ -61,11 +61,11 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
             else
                 anonymous_vm_count++;
         };
-        mmap_read_unlock(mm);
+        //mmap_read_unlock(mm);
     }
 
     // Unlock the memory descriptor
-    task_unlock(task);
+    //task_unlock(task);
 
     seq_printf(m, "Virtual Memory Area Stats:\n");
     seq_printf(m, "Total VMAs: %d\n", total_vm_count);
