@@ -8,19 +8,19 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
     struct vm_area_struct *vma;
     struct mm_struct *mm
 
-    int total_vmas = 0;
-    int biggest_vma_size = 0;
-    int readable_vmas = 0;
-    int writable_vmas = 0;
-    int executable_vmas = 0;
-    int shared_vmas = 0;
-    int private_vmas = 0;
-    int locked_vmas = 0;
-    int executable_image_vmas = 0;
-    int file_backed_vmas = 0;
-    int anonymous_vmas = 0;
+    int total_vm_count = 0;
+    unsigned long biggest_vma_size = 0;
+    int readable_vm_count = 0;
+    int writable_vm_count = 0;
+    int executable_vm_count = 0;
+    int shared_vm_count = 0;
+    int private_vm_count = 0;
+    int locked_vm_count = 0;
+    int executable_image_vm_count = 0;
+    int file_backed_vm_count = 0;
+    int anonymous_vm_count = 0;
 
-    int total_physical_pages = 0;
+    int total_phys_pages = 0;
     int swapped_out_pages = 0;
     int read_only_pages = 0;
     int writable_pages = 0;
