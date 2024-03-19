@@ -65,13 +65,13 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
         };
         mmap_read_unlock(mm);
 
-        // Count physical pages
+        // Count physical pages .special_pages = get_mm_counter(mm, MM_SPECIALPAGES);
         total_phys_pages = get_mm_rss(mm);
         swapped_out_pages = get_mm_counter(mm, MM_SWAPENTS);
         read_only_pages = get_mm_counter(mm, MM_ANONPAGES);
         writable_pages = get_mm_counter(mm, MM_FILEPAGES);
         shared_pages = get_mm_counter(mm, MM_SHMEMPAGES);
-        special_pages = get_mm_counter(mm, MM_SPECIALPAGES);
+        
         huge_pages = get_mm_counter(mm, MM_FILEPAGES);
     }
 
