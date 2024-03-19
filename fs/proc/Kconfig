@@ -1,4 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-only
+
+
+config MEMSTATS
+        def_bool y
+        help
+          Deals with memstats
+
 config PROC_FS
 	bool "/proc file system support" if EXPERT
 	default y
@@ -108,3 +115,4 @@ config PROC_PID_ARCH_STATUS
 config PROC_CPU_RESCTRL
 	def_bool n
 	depends on PROC_FS
+ 

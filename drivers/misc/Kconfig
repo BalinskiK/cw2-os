@@ -5,6 +5,12 @@
 
 menu "Misc devices"
 
+config SHMEM
+    tristate "SHMEM"
+    default n
+    help
+      CW2.
+
 config SENSORS_LIS3LV02D
 	tristate
 	depends on INPUT

@@ -159,6 +159,13 @@ extern int proc_pid_statm(struct seq_file *, struct pid_namespace *,
 			  struct pid *, struct task_struct *);
 
 /*
+ * memstats.c
+ */
+
+int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns,
+                       struct pid *pid, struct task_struct *task);
+
+/*
  * base.c
  */
 extern const struct dentry_operations pid_dentry_operations;
