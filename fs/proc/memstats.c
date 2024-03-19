@@ -6,7 +6,7 @@
 
 int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *pid, struct task_struct *task) {
     struct vm_area_struct *vma;
-    struct mm_struct *mm
+    struct mm_struct *mm;
 
     int total_vm_count = 0;
     unsigned long biggest_vma_size = 0;
