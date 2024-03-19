@@ -5,6 +5,13 @@
 #include <linux/mm.h>
 #include <linux/pagewalk.h>
 
+struct pagewalk_audit {
+    struct mm_struct *mm;
+    struct vm_area_struct *vma;
+    unsigned long address;
+    int flags;
+};
+
 int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *pid, struct task_struct *task) {
     struct vm_area_struct *vma;
     struct mm_struct *mm;
