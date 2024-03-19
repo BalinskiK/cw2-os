@@ -4,6 +4,7 @@
 #include <linux/sched.h>
 #include <linux/mm.h>
 #include <linux/pagewalk.h>
+#include <linux/pagemap.h> 
 
 struct pagewalk_audit {
     struct mm_struct *mm;
