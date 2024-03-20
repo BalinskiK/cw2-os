@@ -33,8 +33,12 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
         struct page *page = pte_page(*pte);
         total_phys_pages++;
 
-        if (pte_val(*pte) & _PAGE_SWP) {
-            // This is a swap PTE
+        // Get the PFN from the PTE
+        pfn_t pfn = pte_pfn(*pte);
+
+        // Check if the PFN corresponds to a swap entry
+        if (pfn_valid(pfn) && is_swap_pfn(pfn_to_pfn_t(pfn))) {
+            // This is a swap entry
             // Increment the counter for swapped out pages
             swapped_out_pages++;
         }
