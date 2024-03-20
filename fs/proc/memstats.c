@@ -33,6 +33,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
                 writable_pages++;
             } else {
                 read_only_pages++;
+            }
         } else if (PageReserved(page)) {
             // Special page
             special_pages++;
