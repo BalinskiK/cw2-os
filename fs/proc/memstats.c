@@ -34,24 +34,25 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
 
         /* Check various page flags */
         if (pte_write(*pte)) {
-            // Swapped out page
-            swapped_out_pages++;
+            writable_pages++;
+        }else{
+            read_only_pages++;
+
         }
+           
         if (PageReserved(page)) {
             // Special page
             special_pages++;
-        } else if (PageHuge(page)) {
+        }
+        if (PageHuge(page)) {
             // Huge page
             huge_pages++;
-        } else if (PageLRU(page)) {
+        }
+        if (PageLRU(page)) {
             // Read-only page
-            read_only_pages++;
-        } else {
-            // Writable page
-            writable_pages++;
         }
 
-        page_ref_count_val = page_ref_count(page);
+        page_ref_count_val = page_count(page);
         if (page_ref_count_val > 0){
             shared_pages++;;
         }
