@@ -51,7 +51,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
 
         page_ref_count_val = page_ref_count(page);
         if (page_ref_count_val > 0){
-            shared_pages += page_ref_count_val;
+            shared_pages++;;
         }
     }
 
