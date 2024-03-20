@@ -132,7 +132,7 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
             
         };
         mmap_read_unlock(mm);
-        mmput(mm);
+        //mmput(mm);
 
     }
 
