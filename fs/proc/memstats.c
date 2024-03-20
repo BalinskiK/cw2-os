@@ -35,7 +35,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
             special_pages++;
         } else if (PageHuge(page)) {
             // Huge page
-            huge_pages++
+            huge_pages++;
         } else if (PageLRU(page)) {
             // Read-only page
             read_only_pages++;
@@ -60,7 +60,8 @@ static int pte_hole_callback(unsigned long addr, unsigned long next,
 int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *pid, struct task_struct *task) {
     struct vm_area_struct *vma;
     struct mm_struct *mm;
-    struct page *page;
+    struct mm_walk_ops ops;
+    struct mm_walk walk;
 
     int total_vm_count = 0;
     unsigned long biggest_vma_size = 0;
@@ -111,12 +112,12 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
                 anonymous_vm_count++;
 
             // Pagewalk to get additional page statistics
-            struct mm_walk_ops ops = {
+            ops = (struct mm_walk_ops) {
                 .pte_entry = pte_entry_callback,
                 .pte_hole = pte_hole_callback,
             };
 
-            struct mm_walk walk = {
+            walk = (struct mm_walk) {
                 .ops = &ops,
                 .mm = mm,
                 .vma = vma,
