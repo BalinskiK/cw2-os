@@ -28,11 +28,16 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
     unsigned int map_count; 
 
 
-    if (pte && !pte_none(*pte)) {
+    if (pte && pte_present(*pte) && !pte_none(*pte)) {
         struct page *page = pte_page(*pte);
         total_phys_pages++;
 
-        /* Check various page flags */
+        if (pte_val(*pte) & _PAGE_SWP) {
+            // This is a swap PTE
+            // Increment the counter for swapped out pages
+            swapped_out_pages++;
+        }
+
         if (pte_write(*pte)) {
             writable_pages++;
         }else{
