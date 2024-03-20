@@ -9,6 +9,15 @@
 #include <linux/pageblock-flags.h>
 #include <linux/mm_types.h>
 
+
+int total_phys_pages = 0;
+int swapped_out_pages = 0;
+int read_only_pages = 0;
+int writable_pages = 0;
+int shared_pages = 0;
+int special_pages = 0;
+int huge_pages = 0;
+
 /* Callback function for walking PTEs */
 static int pte_entry_callback(pte_t *pte, unsigned long addr,
                               unsigned long next, struct mm_walk *walk)
@@ -65,13 +74,6 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
     int file_backed_vm_count = 0;
     int anonymous_vm_count = 0;
 
-    int total_phys_pages = 0;
-    int swapped_out_pages = 0;
-    int read_only_pages = 0;
-    int writable_pages = 0;
-    int shared_pages = 0;
-    int special_pages = 0;
-    int huge_pages = 0;
     // Other memory statistics...
 
     // Lock the task's memory descriptor to ensure data integrity
