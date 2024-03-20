@@ -11,7 +11,6 @@
 #include <linux/page_ref.h>
 #include <asm/pgtable.h>
 #include <asm/page.h>
-#include <asm-generic/pgtable.h>
 
 
 int total_phys_pages = 0;
