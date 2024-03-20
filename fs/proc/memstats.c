@@ -22,34 +22,31 @@ int huge_pages = 0;
 static int pte_entry_callback(pte_t *pte, unsigned long addr,
                               unsigned long next, struct mm_walk *walk)
 {
-    total_phys_pages++;
 
     if (pte && !pte_none(*pte)) {
         struct page *page = pte_page(*pte);
+        total_phys_pages++;
 
-        if (PageReserved(page)) {
+        /* Check various page flags */
+        if (PageLRU(page)) {
+             if (PageDirty(page)) {
+                writable_pages++;
+            } else {
+                read_only_pages++;
+        } else if (PageReserved(page)) {
             // Special page
             special_pages++;
         } else if (PageHuge(page)) {
             // Huge page
             huge_pages++;
-        } else if (PageLRU(page)) {
-             if (PageDirty(page)) {
-                writable_pages++;
-            } else {
-                read_only_pages++;
-            }
-        } else {
+        } else if (PageSwapBacked(page)) {
+            // Swapped out page
+            swapped_out_pages++;
+        }
+        else {
             // Writable page
             writable_pages++;
         }
-    }
-    else if(pte){
-        struct page *page = pte_page(*pte);
-        if (PageSwapBacked(page)) {
-            // Swapped out page
-            swapped_out_pages++;
-            }
     }
 
     return 0; // Continue walking
