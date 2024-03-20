@@ -45,6 +45,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
         }
     }
     else if(pte){
+        struct page *page = pte_page(*pte);
         if (PageSwapBacked(page)) {
             // Swapped out page
             swapped_out_pages++;
