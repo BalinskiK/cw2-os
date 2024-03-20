@@ -23,6 +23,8 @@ int huge_pages = 0;
 static int pte_entry_callback(pte_t *pte, unsigned long addr,
                               unsigned long next, struct mm_walk *walk)
 {
+    int page_ref_count_val;
+
 
     if (pte && !pte_none(*pte)) {
         struct page *page = pte_page(*pte);
@@ -47,7 +49,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
             writable_pages++;
         }
 
-        int page_ref_count_val = page_ref_count(page);
+        page_ref_count_val = page_ref_count(page);
         shared_pages += page_ref_count_val;
     }
 
