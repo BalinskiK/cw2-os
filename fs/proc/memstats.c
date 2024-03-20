@@ -10,6 +10,7 @@
 #include <linux/mm_types.h>
 #include <linux/page_ref.h>
 #include <asm/pgtable.h>
+#include <asm/page.h>
 
 
 int total_phys_pages = 0;
