@@ -38,8 +38,11 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
             // Huge page
             huge_pages++;
         } else if (PageLRU(page)) {
-            // Read-only page
-            read_only_pages++;
+             if (PageDirty(page)) {
+                writable_pages++;
+            } else {
+                read_only_pages++;
+            }
         } else {
             // Writable page
             writable_pages++;
