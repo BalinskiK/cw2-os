@@ -4,7 +4,49 @@
 #include <linux/sched.h>
 #include <linux/mm.h>
 #include <linux/pagewalk.h>
-#include <linux/pagemap.h> 
+#include <linux/pagemap.h>
+#include <linux/page-flags.h>
+#include <linux/pageblock-flags.h>
+#include <linux/mm_types.h>
+
+/* Callback function for walking PTEs */
+static int pte_entry_callback(pte_t *pte, unsigned long addr,
+                              unsigned long next, struct mm_walk *walk)
+{
+    if (pte && !pte_none(*pte)) {
+        struct page *page = pte_page(*pte);
+
+        total_phys_pages++;
+        /* Check various page flags */
+        if (PageSwapBacked(page)) {
+            // Swapped out page
+            swapped_out_pages++;
+        } else if (PageReserved(page)) {
+            // Special page
+            special_pages++;
+        } else if (PageHuge(page)) {
+            // Huge page
+            huge_pages++
+        } else if (PageLRU(page)) {
+            // Read-only page
+            read_only_pages++;
+        } else {
+            // Writable page
+            writable_pages++;
+        }
+    }
+
+    return 0; // Continue walking
+}
+
+/* Callback function for handling holes */
+static int pte_hole_callback(unsigned long addr, unsigned long next,
+                             int depth, struct mm_walk *walk)
+{
+    // Handle holes if necessary
+    return 0; // Continue walking
+}
+
 
 int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *pid, struct task_struct *task) {
     struct vm_area_struct *vma;
@@ -67,40 +109,27 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
                 anonymous_vm_count++;
 
             // Pagewalk to get additional page statistics
-            
+            struct mm_walk_ops ops = {
+                .pte_entry = pte_entry_callback,
+                .pte_hole = pte_hole_callback,
+            };
 
-        
-
-            // Loop through each page in the VMA
-            for (unsigned long addr = vma->vm_start; addr < vma->vm_end; addr += PAGE_SIZE) {
-                page = follow_page(vma, addr, FOLL_GET);
-                if (!page)
-                    continue;
-
-                total_phys_pages++;
-                if (PageSwapCache(page))
-                    swapped_out_pages++;
-                if (PageAnon(page)) {
-                    if (PageReserved(page))
-                        special_pages++;
-                    else if (PageHuge(page))
-                        huge_pages++;
-                    else if (PageDirty(page))
-                        writable_pages++;
-                    else
-                        read_only_pages++;
-                } else if (PageReserved(page)) {
-                    special_pages++;
-                } else {
-                    shared_pages++;
-                }
-
+            struct mm_walk walk = {
+                .ops = &ops,
+                .mm = mm,
+                .vma = vma,
+                .action = ACTION_SUBTREE,
+                .no_vma = false,
+                .private = NULL,
+            };
                
             }
-
+            
+            walk_page_vma(vma, &ops, NULL);
             
         };
         mmap_read_unlock(mm);
+        mmput(mm);
 
     }
 
