@@ -25,7 +25,7 @@ int huge_pages = 0;
 static int pte_entry_callback(pte_t *pte, unsigned long addr,
                               unsigned long next, struct mm_walk *walk)
 {
-    int page_ref_count_val;
+    unsigned int map_count; 
 
 
     if (pte && !pte_none(*pte)) {
@@ -52,7 +52,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
             // Read-only page
         }
 
-        unsigned int map_count = page_mapcount(page);
+        map_count = page_mapcount(page);
 
         if (map_count > 1) {
             // Page is being shared
