@@ -43,7 +43,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
         } else if (PageHuge(page)) {
             // Huge page
             huge_pages++;
-        } else if (PageReadOnly(page)) {
+        } else if (PageLRU(page)) {
             // Read-only page
             read_only_pages++;
         } else {
