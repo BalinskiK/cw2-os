@@ -34,7 +34,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
 
 
 
-        if (!pte_none(*pte) && !pte_present(*pte)) {
+        if (!pte_present(*pte)) {
         
             swapped_out_pages++;
         }
@@ -54,10 +54,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
             // Huge page
             huge_pages++;
         }
-        if (PageLRU(page)) {
-            // Read-only page
-        }
-
+        
         map_count = page_mapcount(page);
 
         if (map_count > 1) {
@@ -103,10 +100,6 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
     special_pages = 0;
     huge_pages = 0;
 
-    // Other memory statistics...
-
-    // Lock the task's memory descriptor to ensure data integrity
-    //task_lock(task);
 
     // Gather memory statistics
     mm = get_task_mm(task);
@@ -139,7 +132,6 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
             else
                 anonymous_vm_count++;
 
-            // Pagewalk to get additional page statistics
             ops = (struct mm_walk_ops) {
                 .pte_entry = pte_entry_callback,
                 .pte_hole = pte_hole_callback,
@@ -160,7 +152,6 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
             mmput(mm);    
         };
     
-    // Unlock the memory descriptor
     task_unlock(task);
 
     seq_printf(m, "Virtual Memory Area Stats:\n");
