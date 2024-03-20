@@ -22,10 +22,10 @@ int huge_pages = 0;
 static int pte_entry_callback(pte_t *pte, unsigned long addr,
                               unsigned long next, struct mm_walk *walk)
 {
-    total_phys_pages++;
 
     if (pte && !pte_none(*pte)) {
         struct page *page = pte_page(*pte);
+        total_phys_pages++;
 
         /* Check various page flags */
         if (PageSwapBacked(page)) {
