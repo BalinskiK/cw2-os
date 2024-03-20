@@ -75,6 +75,14 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
     int file_backed_vm_count = 0;
     int anonymous_vm_count = 0;
 
+    total_phys_pages = 0;
+    swapped_out_pages = 0;
+    read_only_pages = 0;
+    writable_pages = 0;
+    shared_pages = 0;
+    special_pages = 0;
+    huge_pages = 0;
+
     // Other memory statistics...
 
     // Lock the task's memory descriptor to ensure data integrity
