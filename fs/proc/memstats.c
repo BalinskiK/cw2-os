@@ -8,6 +8,7 @@
 #include <linux/page-flags.h>
 #include <linux/pageblock-flags.h>
 #include <linux/mm_types.h>
+#include <linux/page_ref.h>
 
 
 int total_phys_pages = 0;
@@ -28,37 +29,36 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
         total_phys_pages++;
 
         /* Check various page flags */
-        if (PageLRU(page)) {
-             if (PageDirty(page)) {
-                writable_pages++;
-            } else {
-                read_only_pages++;
-            }
-        } else if (PageReserved(page)) {
+        if (PageSwapBacked(page)) {
+            // Swapped out page
+            swapped_out_pages++;
+        }
+        if (PageReserved(page)) {
             // Special page
             special_pages++;
         } else if (PageHuge(page)) {
             // Huge page
             huge_pages++;
-        } else if (PageSwapBacked(page)) {
-            // Swapped out page
-            swapped_out_pages++;
-        }
-        else {
+        } else if (PageLRU(page)) {
+            // Read-only page
+            read_only_pages++;
+        } else {
             // Writable page
             writable_pages++;
         }
+
+        int page_ref_count_val = page_ref_count(page);
+        shared_pages += page_ref_count_val;
     }
 
-    return 0; // Continue walking
+    return 0; 
 }
 
 /* Callback function for handling holes */
 static int pte_hole_callback(unsigned long addr, unsigned long next,
                              int depth, struct mm_walk *walk)
 {
-    // Handle holes if necessary
-    return 0; // Continue walking
+    return 0; 
 }
 
 
