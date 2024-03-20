@@ -34,7 +34,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
 
 
 
-        if (!pte_none(pte) && !pte_present(pte)) {
+        if (!pte_none(*pte) && !pte_present(*pte)) {
         
             swapped_out_pages++;
         }
