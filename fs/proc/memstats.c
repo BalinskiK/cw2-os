@@ -11,7 +11,6 @@
 #include <linux/page_ref.h>
 #include <asm/pgtable.h>
 #include <asm/page.h>
-#include <linux/swapops.h>
 
 
 int total_phys_pages = 0;
@@ -29,12 +28,13 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
     unsigned int map_count; 
 
 
-    if (pte && pte_present(*pte) && !pte_none(*pte)) {
+    if (pte && !pte_none(*pte)) {
         struct page *page = pte_page(*pte);
         total_phys_pages++;
 
 
-        if (is_swap_pte(*pte)) {
+
+        if (!pte_none(pte) && !pte_present(pte)) {
         
             swapped_out_pages++;
         }
