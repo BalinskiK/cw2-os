@@ -9,6 +9,7 @@
 #include <linux/pageblock-flags.h>
 #include <linux/mm_types.h>
 #include <linux/page_ref.h>
+#include <asm/pgtable.h>
 
 
 int total_phys_pages = 0;
@@ -31,7 +32,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
         total_phys_pages++;
 
         /* Check various page flags */
-        if (PageDirty(page)) {
+        if (pte_write(*pte)) {
             // Swapped out page
             swapped_out_pages++;
         }
@@ -41,7 +42,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
         } else if (PageHuge(page)) {
             // Huge page
             huge_pages++;
-        } else if (PageLRU(page)) {
+        } else if (PageReadOnly(page)) {
             // Read-only page
             read_only_pages++;
         } else {
