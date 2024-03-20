@@ -9,6 +9,7 @@
 int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *pid, struct task_struct *task) {
     struct vm_area_struct *vma;
     struct mm_struct *mm;
+    struct page *page;
 
     int total_vm_count = 0;
     unsigned long biggest_vma_size = 0;
@@ -67,6 +68,9 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
 
             // Pagewalk to get additional page statistics
             
+
+        
+
             // Loop through each page in the VMA
             for (unsigned long addr = vma->vm_start; addr < vma->vm_end; addr += PAGE_SIZE) {
                 page = follow_page(vma, addr, FOLL_GET);
@@ -91,10 +95,10 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
                     shared_pages++;
                 }
 
-                page_cache_release(page);
+               
             }
 
-
+            
         };
         mmap_read_unlock(mm);
 
