@@ -31,7 +31,7 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
         total_phys_pages++;
 
         /* Check various page flags */
-        if (PageSwapBacked(page)) {
+        if (PageDirty(page)) {
             // Swapped out page
             swapped_out_pages++;
         }
