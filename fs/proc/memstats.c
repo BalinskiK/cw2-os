@@ -83,7 +83,6 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
     // Gather memory statistics
     mm = get_task_mm(task);
 
-    task_lock(task);
     if (mm) {
         VMA_ITERATOR(vmi, mm, 0);
         mmap_read_lock(mm);
@@ -132,12 +131,11 @@ int proc_pid_memstats(struct seq_file *m, struct pid_namespace *ns, struct pid *
             
         };
         mmap_read_unlock(mm);
-        //mmput(mm);
+        mmput(mm);
 
     }
 
     // Unlock the memory descriptor
-    task_unlock(task);
 
     seq_printf(m, "Virtual Memory Area Stats:\n");
     seq_printf(m, "Total VMAs: %d\n", total_vm_count);
