@@ -52,11 +52,12 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
             // Read-only page
         }
 
-        int page_mapcount_val = atomic_read(&page->_mapcount);
-        if (page_mapcount_val > 1) {
-            shared_pages++; // Increment the shared pages counter
-        }
+        unsigned int map_count = page_mapcount(page);
 
+        if (map_count > 1) {
+            // Page is being shared
+            shared_pages++;
+        }
     }
 
     return 0; 
