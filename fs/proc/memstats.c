@@ -22,16 +22,12 @@ int huge_pages = 0;
 static int pte_entry_callback(pte_t *pte, unsigned long addr,
                               unsigned long next, struct mm_walk *walk)
 {
+    total_phys_pages++;
 
     if (pte && !pte_none(*pte)) {
         struct page *page = pte_page(*pte);
-        total_phys_pages++;
 
-        /* Check various page flags */
-        if (PageSwapBacked(page)) {
-            // Swapped out page
-            swapped_out_pages++;
-        } else if (PageReserved(page)) {
+        if (PageReserved(page)) {
             // Special page
             special_pages++;
         } else if (PageHuge(page)) {
@@ -47,6 +43,12 @@ static int pte_entry_callback(pte_t *pte, unsigned long addr,
             // Writable page
             writable_pages++;
         }
+    }
+    else if(pte){
+        if (PageSwapBacked(page)) {
+            // Swapped out page
+            swapped_out_pages++;
+            }
     }
 
     return 0; // Continue walking
